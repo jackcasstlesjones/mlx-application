@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2 import pool
 from datetime import datetime
+import os
 
 # Database connection pool
 db_pool = None
@@ -10,14 +11,21 @@ def init_db():
     global db_pool
     
     try:
+        # Get database config from environment or use defaults
+        host = os.environ.get("DB_HOST", "localhost")
+        dbname = os.environ.get("DB_NAME", "mlx-db")
+        user = os.environ.get("DB_USER", "postgres")  # Default to postgres user for container compatibility
+        password = os.environ.get("DB_PASSWORD", "")
+        port = os.environ.get("DB_PORT", "5432")
+        
         # Create connection pool
         db_pool = pool.SimpleConnectionPool(
             1, 10,
-            dbname="mlx-db",
-            user="jack",  # Using system username instead of postgres
-            password="",  # Add password if required
-            host="localhost",
-            port="5432"
+            dbname=dbname,
+            user=user,
+            password=password,
+            host=host,
+            port=port
         )
         print("Successfully connected to database")
     except Exception as e:

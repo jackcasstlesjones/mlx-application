@@ -1,10 +1,22 @@
 import psycopg2
 from psycopg2 import sql
 import pandas as pd
+import os
 
 def get_connection_string():
     """Get the PostgreSQL connection string"""
-    return "dbname=mlx-db user=jack host=localhost port=5432"
+    host = os.environ.get("DB_HOST", "localhost")
+    dbname = os.environ.get("DB_NAME", "mlx-db")
+    user = os.environ.get("DB_USER", "jack")  # Default to local user if not in container
+    password = os.environ.get("DB_PASSWORD", "")
+    port = os.environ.get("DB_PORT", "5432")
+    
+    # Build connection string with password only if it exists
+    conn_string = f"dbname={dbname} user={user} host={host} port={port}"
+    if password:
+        conn_string += f" password={password}"
+        
+    return conn_string
 
 def query_predictions(limit=100):
     """Query the most recent predictions"""
