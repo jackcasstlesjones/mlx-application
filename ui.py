@@ -8,6 +8,12 @@ from streamlit_drawable_canvas import st_canvas
 from torchvision import transforms
 import db
 import atexit
+import os
+
+# Configure Streamlit for cloud environments
+os.environ['STREAMLIT_SERVER_ADDRESS'] = '0.0.0.0'
+os.environ['STREAMLIT_SERVER_HEADLESS'] = 'true'
+os.environ['STREAMLIT_SERVER_ENABLE_CORS'] = 'false'
 
 
 # Define the model architecture (match exactly with app.py)
